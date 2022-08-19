@@ -1,7 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.ComponentModel.DataAnnotations;
 namespace Note.Model
 {
-    public class Noted
+    public class Magazine
     {
         public int Id { get; set; }
         [Required]
@@ -11,11 +13,13 @@ namespace Note.Model
         public DateTime? CreatedOn { get; set; }
         public DateTime? LastupdatedOn { get; set; }
 
-        public User user { get; set; }
-        public int userId { get; set; }
+        public User User { get; set; }
+        public int UserId
+        {
+            get; set;
 
-        public Version version { get; set; }
+        }
 
-        public int VersionId { get; set; } 
     }
+   
 }

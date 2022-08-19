@@ -12,8 +12,8 @@ using Note.Data;
 namespace Note.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220810172558_UserNotedRelation")]
-    partial class UserNotedRelation
+    [Migration("20220816170847_uservs")]
+    partial class uservs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,7 @@ namespace Note.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Note.Model.Noted", b =>
+            modelBuilder.Entity("Note.Model.Magazine", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -46,23 +46,26 @@ namespace Note.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("userId")
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VersionId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("Noteds");
+                    b.ToTable("Magazines");
                 });
 
             modelBuilder.Entity("Note.Model.User", b =>
                 {
-                    b.Property<int>("userId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("userId"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime?>("JoinedOn")
                         .IsRequired()
@@ -72,23 +75,67 @@ namespace Note.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("userId");
+                    b.HasKey("Id");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Note.Model.Noted", b =>
+            modelBuilder.Entity("Note.Model.Version", b =>
                 {
-                    b.HasOne("Note.Model.User", null)
-                        .WithMany("noteds")
-                        .HasForeignKey("userId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MagazineId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MagazineId");
+
+                    b.ToTable("Versions");
+                });
+
+            modelBuilder.Entity("Note.Model.Magazine", b =>
+                {
+                    b.HasOne("Note.Model.User", "User")
+                        .WithMany("magazines")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Note.Model.Version", b =>
+                {
+                    b.HasOne("Note.Model.Magazine", "Magazine")
+                        .WithMany("Version")
+                        .HasForeignKey("MagazineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Magazine");
+                });
+
+            modelBuilder.Entity("Note.Model.Magazine", b =>
+                {
+                    b.Navigation("Version");
                 });
 
             modelBuilder.Entity("Note.Model.User", b =>
                 {
-                    b.Navigation("noteds");
+                    b.Navigation("magazines");
                 });
 #pragma warning restore 612, 618
         }

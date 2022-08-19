@@ -5,11 +5,13 @@ namespace Note.Model
     {
         public int Id { get; set; }
         [Required]
-        public string Name { get; set; }
-        [Required]
-        public string Description { get; set; }
-        public int noteId { get; set; }
 
-        public List<Noted> noteds { get; set; }
+        public int VersionCode { get; set; }
+        [Required]
+        public DateTime? CreatedOn { get; set; }
+        public Magazine Magazine { get; set; }
+        public int MagazineId { get; set; }
+      
     }
-}
+    }
+

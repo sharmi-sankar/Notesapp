@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Note.Data;
 
@@ -11,9 +12,10 @@ using Note.Data;
 namespace Note.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220816170306_user")]
+    partial class user
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,6 +47,9 @@ namespace Note.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VersionId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -83,15 +88,16 @@ namespace Note.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime?>("CreatedOn")
+                    b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("datetime2");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MagazineId")
                         .HasColumnType("int");
 
-                    b.Property<int>("VersionCode")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -114,12 +120,17 @@ namespace Note.Data.Migrations
             modelBuilder.Entity("Note.Model.Version", b =>
                 {
                     b.HasOne("Note.Model.Magazine", "Magazine")
-                        .WithMany()
+                        .WithMany("Version")
                         .HasForeignKey("MagazineId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Magazine");
+                });
+
+            modelBuilder.Entity("Note.Model.Magazine", b =>
+                {
+                    b.Navigation("Version");
                 });
 
             modelBuilder.Entity("Note.Model.User", b =>

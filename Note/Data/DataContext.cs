@@ -11,7 +11,7 @@ namespace Note.Data
         {
 
         }
-        public DbSet<Noted> Noteds { get; set; }
+        public DbSet<Magazine> Magazines { get; set; }
         public DbSet<User> Users { get; set; }
 
         public DbSet<Model.Version> Versions { get; set; }

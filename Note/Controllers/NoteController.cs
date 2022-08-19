@@ -16,24 +16,21 @@ namespace Note.Controllers
             _context = context;
         }
         [HttpGet]
-        public async Task<ActionResult<List<Noted>>> Get(int userId)
+        public async Task<ActionResult<List<Magazine>>> Get(int userId)
         {
-            var noted = await _context.Noteds
-                .Where(c => c.userId == userId)
+            var magazines = await _context.Magazines
+                .Where(Magazine => Magazine.UserId == userId)
+                .Include(Magazine => Magazine.Version)
                 .ToListAsync();
-            return noted;
+            return magazines;
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<Noted>>> Create(Noted noted)
+        public async Task<ActionResult<String>> Create(Magazine magazine)
         {
-            var user = await _context.Users.FindAsync(noted.userId);
-            if(user == null)
-                return NotFound();
-            _context.Noteds.Add(noted);
+            var magazineobj = _context.Magazines.Add(magazine);
             await _context.SaveChangesAsync();
-            return await Get(noted.userId);
+            return magazineobj.ToString();
         }
-
     }
 }
